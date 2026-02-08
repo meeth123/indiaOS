@@ -135,10 +135,12 @@ export default function ResultsPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   /* FIX #9: collapse issues on mobile — show top 5 by default */
   const [showAll, setShowAll] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
 
   useEffect(() => {
     try {
-      const stored = localStorage.getItem("indiaos_quiz");
+      const stored = localStorage.getItem("alertdoc_quiz");
       if (stored) {
         const answers: QuizAnswers = JSON.parse(stored);
         const result = runRulesEngine(answers);
@@ -146,6 +148,10 @@ export default function ResultsPage() {
       }
     } catch {
       // Invalid data
+    }
+
+    if (localStorage.getItem("alertdoc_waitlist_email")) {
+      setWaitlistSubmitted(true);
     }
   }, []);
 
@@ -155,7 +161,7 @@ export default function ResultsPage() {
     setSubmitError(null);
 
     try {
-      const stored = localStorage.getItem("indiaos_quiz");
+      const stored = localStorage.getItem("alertdoc_quiz");
       if (!stored) throw new Error("No quiz data found");
 
       const quizAnswers = JSON.parse(stored);
@@ -170,7 +176,7 @@ export default function ResultsPage() {
         throw new Error(data.error || "Failed to send report");
       }
 
-      localStorage.setItem("indiaos_email", email);
+      localStorage.setItem("alertdoc_email", email);
       setEmailSubmitted(true);
     } catch (err) {
       setSubmitError(
@@ -192,7 +198,7 @@ export default function ResultsPage() {
   }, [showAll]);
 
   const handleShare = (platform: string) => {
-    const text = `I just scored ${output?.score}/100 on the IndiaOS NRI Compliance Health Check. Think you're compliant? Check yours:`;
+    const text = `I just scored ${output?.score}/100 on the AlertDoc NRI Compliance Health Check. Think you're compliant? Check yours:`;
     const url = typeof window !== "undefined" ? window.location.origin : "";
     if (platform === "twitter") {
       window.open(
@@ -261,7 +267,7 @@ export default function ResultsPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
         <Link href="/">
           <span className="highlight-yellow font-mono font-bold text-xl tracking-tight border-3 border-black px-3 py-1">
-            INDIAOS
+            ALERTDOC
           </span>
         </Link>
         <Link href="/quiz" className="brutal-btn text-xs">
@@ -523,24 +529,44 @@ export default function ResultsPage() {
           <h2 className="font-mono font-bold text-xl md:text-3xl mb-3">
             Get ongoing protection
           </h2>
-          <p className="font-sans text-gray-600 mb-2">
-            Automated monitoring, deadline reminders, and guided fixes.
+          <p className="font-sans text-gray-600 mb-6">
+            Automated monitoring, deadline reminders, and guided fixes. Coming soon.
           </p>
-          <p className="font-mono font-bold text-3xl mb-6">
-            <span className="highlight-pink">$9.99/mo</span>
-          </p>
-          <button
-            className="brutal-btn brutal-btn-pink text-lg"
-            onClick={() =>
-              alert(
-                "Coming soon! We'll notify you when this launches."
-              )
-            }
-          >
-            JOIN WAITLIST
-          </button>
+          {waitlistSubmitted ? (
+            <div className="p-4 bg-green bg-opacity-30 border-3 border-black">
+              <p className="font-mono font-bold text-sm" style={{ color: "#16a34a" }}>
+                You&apos;re on the list! We&apos;ll notify you when we launch.
+              </p>
+            </div>
+          ) : (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (waitlistEmail) {
+                  localStorage.setItem("alertdoc_waitlist_email", waitlistEmail);
+                  setWaitlistSubmitted(true);
+                }
+              }}
+              className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto"
+            >
+              <input
+                type="email"
+                value={waitlistEmail}
+                onChange={(e) => setWaitlistEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+                className="flex-1 border-3 border-black p-3 font-sans text-sm focus:outline-none focus:ring-2 focus:ring-yellow"
+              />
+              <button
+                type="submit"
+                className="brutal-btn brutal-btn-pink text-sm"
+              >
+                GET UPDATES
+              </button>
+            </form>
+          )}
           <p className="font-sans text-xs text-gray-400 mt-4">
-            Coming soon. Join the waitlist to get early access.
+            No spam. Just launch updates and early access.
           </p>
         </div>
       </div>

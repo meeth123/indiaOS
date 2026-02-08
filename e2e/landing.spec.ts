@@ -10,8 +10,8 @@ test.describe("Landing Page", () => {
     await expect(page.locator("h1")).toContainText("India didn't leave")
   })
 
-  test("renders INDIAOS logo in nav", async ({ page }) => {
-    await expect(page.locator("nav").getByText("INDIAOS")).toBeVisible()
+  test("renders ALERTDOC logo in nav", async ({ page }) => {
+    await expect(page.locator("nav").getByText("ALERTDOC")).toBeVisible()
   })
 
   test("CHECK NOW button links to /quiz", async ({ page }) => {

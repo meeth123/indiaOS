@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -84,19 +84,34 @@ const hasFinancialAccounts = (a: QuizAnswers) =>
 const hasIndianIncomeOrAssets = (a: QuizAnswers) =>
   a.assets.length > 0 || (a.incomeTypes.length > 0 && !a.incomeTypes.includes("none"));
 
+const financialAccountCount = (a: QuizAnswers) =>
+  (["ppf", "epf", "nps", "bank_accounts", "nre_nro"] as const).filter((t) =>
+    a.assets.includes(t)
+  ).length;
+
 const DOC_CHECK_ITEMS: DocCheckItem[] = [
   { key: "hasPAN", label: "I have a PAN card" },
-  { key: "panLinkedAadhaar", label: "My PAN is linked to Aadhaar" },
   { key: "hasAadhaar", label: "I have an Aadhaar card" },
-  { key: "hasOCI", label: "I have an OCI card", showWhen: (a) => a.usStatus === "US Citizen" },
-  { key: "ociUpdatedAfterPassportRenewal", label: "My OCI is updated after last passport renewal", showWhen: (a) => a.usStatus === "US Citizen" },
-  { key: "surrenderedIndianPassport", label: "I've surrendered my Indian passport", showWhen: (a) => a.usStatus === "US Citizen" },
-  { key: "filedIndianITR", label: "I've filed Indian ITR since becoming NRI", showWhen: hasIndianIncomeOrAssets },
-  { key: "filedFBAR", label: "I've filed FBAR (FinCEN 114)", showWhen: hasFinancialAccounts },
-  { key: "filedFATCA", label: "I've filed FATCA Form 8938", showWhen: (a) => a.assets.length > 0 },
-  { key: "reportedPFICs", label: "I've reported Indian mutual funds as PFICs", showWhen: (a) => a.assets.includes("mutual_funds") },
-  { key: "updatedBankKYC", label: "I've updated bank KYC to NRI status", showWhen: hasAccounts },
-  { key: "convertedToNRO", label: "I've converted savings accounts to NRO", showWhen: (a) => a.assets.includes("bank_accounts") },
+  { key: "panLinkedAadhaar", label: "My PAN is linked to Aadhaar",
+    showWhen: (a) => a.hasPAN === "yes" && a.hasAadhaar === "yes" },
+  { key: "hasOCI", label: "I have an OCI card",
+    showWhen: (a) => a.usStatus === "US Citizen" },
+  { key: "ociUpdatedAfterPassportRenewal", label: "My OCI is updated after last passport renewal",
+    showWhen: (a) => a.usStatus === "US Citizen" && a.hasOCI === "yes" },
+  { key: "surrenderedIndianPassport", label: "I've surrendered my Indian passport",
+    showWhen: (a) => a.usStatus === "US Citizen" },
+  { key: "filedIndianITR", label: "I've filed Indian ITR since becoming NRI",
+    showWhen: hasIndianIncomeOrAssets },
+  { key: "filedFBAR", label: "I've filed FBAR (FinCEN 114)",
+    showWhen: (a) => hasAccounts(a) || financialAccountCount(a) >= 2 },
+  { key: "filedFATCA", label: "I've filed FATCA Form 8938",
+    showWhen: (a) => a.assets.length > 0 },
+  { key: "reportedPFICs", label: "I've reported Indian mutual funds as PFICs",
+    showWhen: (a) => a.assets.includes("mutual_funds") },
+  { key: "updatedBankKYC", label: "I've updated bank KYC to NRI status",
+    showWhen: hasAccounts },
+  { key: "convertedToNRO", label: "I've converted savings accounts to NRO",
+    showWhen: (a) => a.assets.includes("bank_accounts") },
 ];
 
 const YEARS = Array.from({ length: 35 }, (_, i) => String(2024 - i));
@@ -107,6 +122,15 @@ export default function QuizPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>(DEFAULT_QUIZ_ANSWERS);
+
+  const visibleDocItems = DOC_CHECK_ITEMS.filter(
+    (item) => !item.showWhen || item.showWhen(answers)
+  );
+  const totalSteps = 4 + visibleDocItems.length;
+
+  useEffect(() => {
+    if (step > totalSteps) setStep(totalSteps);
+  }, [totalSteps]);
 
   const updateAnswer = useCallback(
     <K extends keyof QuizAnswers>(key: K, value: QuizAnswers[K]) => {
@@ -144,7 +168,7 @@ export default function QuizPage() {
   };
 
   const handleSubmit = () => {
-    localStorage.setItem("indiaos_quiz", JSON.stringify(answers));
+    localStorage.setItem("alertdoc_quiz", JSON.stringify(answers));
     router.push("/results");
   };
 
@@ -158,10 +182,14 @@ export default function QuizPage() {
         return true; // Amounts are optional
       case 4:
         return answers.incomeTypes.length > 0;
-      case 5:
-        return true; // Doc check items are optional
-      default:
+      default: {
+        if (step >= 5) {
+          const docIndex = step - 5;
+          const item = visibleDocItems[docIndex];
+          if (item) return answers[item.key] !== "";
+        }
         return true;
+      }
     }
   };
 
@@ -173,11 +201,11 @@ export default function QuizPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
         <Link href="/">
           <span className="highlight-yellow font-mono font-bold text-xl tracking-tight border-3 border-black px-3 py-1">
-            INDIAOS
+            ALERTDOC
           </span>
         </Link>
         <span className="font-mono text-sm font-bold text-gray-500">
-          STEP {step} OF 5
+          STEP {step} OF {totalSteps}
         </span>
       </nav>
 
@@ -186,7 +214,7 @@ export default function QuizPage() {
         <div className="max-w-3xl mx-auto progress-bar-brutal">
           <div
             className="progress-fill"
-            style={{ width: `${(step / 5) * 100}%` }}
+            style={{ width: `${(step / totalSteps) * 100}%` }}
           />
         </div>
       </div>
@@ -448,75 +476,52 @@ export default function QuizPage() {
           </div>
         )}
 
-        {/* Step 5 */}
-        {step === 5 && (
-          <div className="brutal-card p-6 md:p-10">
-            <h2 className="font-mono font-bold text-2xl md:text-3xl mb-2">
-              Quick Document Check
-            </h2>
-            <p className="font-sans text-gray-600 mb-8">
-              Answer Yes, No, or Not Sure for each. Be honest &mdash; this is
-              just for you.
-            </p>
+        {/* Doc Check — one question per screen */}
+        {step >= 5 && step <= totalSteps && (() => {
+          const docIndex = step - 5;
+          const item = visibleDocItems[docIndex];
+          if (!item) return null;
+          const val = answers[item.key] as TriState;
+          return (
+            <div className="brutal-card p-6 md:p-10">
+              <h2 className="font-mono font-bold text-2xl md:text-3xl mb-2">
+                Quick Document Check
+              </h2>
+              <p className="font-sans text-gray-600 mb-8">
+                Question {docIndex + 1} of {visibleDocItems.length}
+              </p>
 
-            <div className="space-y-4">
-              {DOC_CHECK_ITEMS.filter((item) => !item.showWhen || item.showWhen(answers)).map((item) => {
-                const val = answers[item.key] as TriState;
-                return (
-                  <div
-                    key={item.key}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 border-3 border-black bg-white"
+              <p className="font-mono font-bold text-lg mb-6">
+                {item.label}
+              </p>
+
+              <div className="grid grid-cols-1 gap-3">
+                {([
+                  { value: "yes" as const, label: "YES", activeClass: "brutal-btn-yellow" },
+                  { value: "no" as const, label: "NO", activeClass: "brutal-btn-pink" },
+                  { value: "not_sure" as const, label: "NOT SURE", activeClass: "brutal-btn-yellow" },
+                ] as const).map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => {
+                      updateAnswer(item.key as keyof QuizAnswers, opt.value as never);
+                      if (step < totalSteps) {
+                        setStep((s) => s + 1);
+                      } else {
+                        handleSubmit();
+                      }
+                    }}
+                    className={`brutal-btn text-sm ${
+                      val === opt.value ? opt.activeClass : ""
+                    }`}
                   >
-                    <span className="font-sans text-sm font-medium flex-1">
-                      {item.label}
-                    </span>
-                    <div className="flex gap-0">
-                      <button
-                        onClick={() =>
-                          updateAnswer(
-                            item.key as keyof QuizAnswers,
-                            "yes" as never
-                          )
-                        }
-                        className={`tri-state-btn ${
-                          val === "yes" ? "active-yes" : ""
-                        }`}
-                      >
-                        Yes
-                      </button>
-                      <button
-                        onClick={() =>
-                          updateAnswer(
-                            item.key as keyof QuizAnswers,
-                            "no" as never
-                          )
-                        }
-                        className={`tri-state-btn ${
-                          val === "no" ? "active-no" : ""
-                        }`}
-                      >
-                        No
-                      </button>
-                      <button
-                        onClick={() =>
-                          updateAnswer(
-                            item.key as keyof QuizAnswers,
-                            "not_sure" as never
-                          )
-                        }
-                        className={`tri-state-btn ${
-                          val === "not_sure" ? "active-notsure" : ""
-                        }`}
-                      >
-                        Not Sure
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ── Navigation ── */}
         <div className="flex justify-between mt-8">
@@ -532,7 +537,7 @@ export default function QuizPage() {
           )}
 
           {/* FIX #4: disabled state handled by CSS now — no opacity hack */}
-          {step < 5 ? (
+          {step < totalSteps ? (
             <button
               onClick={() => setStep((s) => s + 1)}
               disabled={!canProceed()}

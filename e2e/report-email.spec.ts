@@ -30,7 +30,7 @@ async function seedQuizData(
   const data = { ...defaults, ...overrides }
   await page.goto("/quiz")
   await page.evaluate(
-    (d) => localStorage.setItem("indiaos_quiz", JSON.stringify(d)),
+    (d) => localStorage.setItem("alertdoc_quiz", JSON.stringify(d)),
     data
   )
   await page.goto("/results")
@@ -39,9 +39,10 @@ async function seedQuizData(
 test.describe("Report Email Flow", () => {
   test("email form is visible on results page", async ({ page }) => {
     await seedQuizData(page)
-    await expect(page.locator('input[type="email"]')).toBeVisible()
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    await expect(reportForm.locator('input[type="email"]')).toBeVisible()
     await expect(
-      page.locator("button", { hasText: "SEND MY REPORT" })
+      reportForm.locator("button", { hasText: "SEND MY REPORT" })
     ).toBeVisible()
   })
 
@@ -75,17 +76,19 @@ test.describe("Report Email Flow", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     // Should show loading state
     await expect(
       page.locator("button", { hasText: "SENDING..." })
     ).toBeVisible()
 
-    // Input should be disabled while submitting
-    await expect(emailInput).toBeDisabled()
+    // Input should be disabled while submitting (use broader form locator since button text changed)
+    const reportSection = page.locator("form", { hasText: "SENDING..." })
+    await expect(reportSection.locator('input[type="email"]')).toBeDisabled()
   })
 
   test("shows success message after successful submission", async ({
@@ -102,9 +105,10 @@ test.describe("Report Email Flow", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     await expect(
       page.getByText("Report sent! Check your email for the PDF.")
@@ -123,9 +127,10 @@ test.describe("Report Email Flow", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     await expect(page.getByText("Failed to send email")).toBeVisible()
   })
@@ -138,9 +143,10 @@ test.describe("Report Email Flow", () => {
       await route.abort("connectionrefused")
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     // Should show some error
     await expect(page.locator(".bg-red-50")).toBeVisible({ timeout: 5000 })
@@ -158,9 +164,10 @@ test.describe("Report Email Flow", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     // Wait for error
     await expect(page.getByText("Server error")).toBeVisible()
@@ -168,7 +175,7 @@ test.describe("Report Email Flow", () => {
     // Form should be re-enabled for retry
     await expect(emailInput).not.toBeDisabled()
     await expect(
-      page.locator("button", { hasText: "SEND MY REPORT" })
+      reportForm.locator("button", { hasText: "SEND MY REPORT" })
     ).not.toBeDisabled()
   })
 
@@ -186,9 +193,10 @@ test.describe("Report Email Flow", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("user@test.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
 
     await expect(
       page.getByText("Report sent! Check your email for the PDF.")
@@ -207,12 +215,13 @@ test.describe("Report Email Flow", () => {
   }) => {
     await seedQuizData(page)
 
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
     // Click without filling email
-    const sendBtn = page.locator("button", { hasText: "SEND MY REPORT" })
+    const sendBtn = reportForm.locator("button", { hasText: "SEND MY REPORT" })
     await sendBtn.click()
 
     // The form should not submit — email input should still be visible
-    await expect(page.locator('input[type="email"]')).toBeVisible()
+    await expect(reportForm.locator('input[type="email"]')).toBeVisible()
     // Success message should NOT appear
     await expect(
       page.getByText("Report sent! Check your email for the PDF.")

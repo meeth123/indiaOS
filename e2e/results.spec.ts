@@ -30,7 +30,7 @@ async function seedQuizData(
   const data = { ...defaults, ...overrides }
   await page.goto("/quiz")
   await page.evaluate(
-    (d) => localStorage.setItem("indiaos_quiz", JSON.stringify(d)),
+    (d) => localStorage.setItem("alertdoc_quiz", JSON.stringify(d)),
     data
   )
   await page.goto("/results")
@@ -76,9 +76,10 @@ test.describe("Results Page", () => {
       })
     })
 
-    const emailInput = page.locator('input[type="email"]')
+    const reportForm = page.locator("form", { hasText: "SEND MY REPORT" })
+    const emailInput = reportForm.locator('input[type="email"]')
     await emailInput.fill("test@example.com")
-    await page.locator("button", { hasText: "SEND MY REPORT" }).click()
+    await reportForm.locator("button", { hasText: "SEND MY REPORT" }).click()
     await expect(page.getByText("Report sent! Check your email for the PDF.")).toBeVisible()
   })
 
@@ -123,12 +124,13 @@ test.describe("Results Page", () => {
     await expect(retake).toHaveAttribute("href", "/quiz")
   })
 
-  test("waitlist CTA shows pricing", async ({ page }) => {
+  test("waitlist CTA shows email capture", async ({ page }) => {
     await seedQuizData(page)
-    await expect(page.getByText("$9.99/mo")).toBeVisible()
+    await expect(page.getByText("Get ongoing protection")).toBeVisible()
     await expect(
-      page.locator("button", { hasText: "JOIN WAITLIST" })
+      page.locator("button", { hasText: "GET UPDATES" })
     ).toBeVisible()
+    await expect(page.locator('input[type="email"]').last()).toBeVisible()
   })
 
   test("severity badges render with correct styling", async ({ page }) => {

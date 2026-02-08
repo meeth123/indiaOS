@@ -35,14 +35,12 @@ test.describe("Full Quiz Flow -> Results", () => {
     await page.locator("button", { hasText: "Interest income" }).click()
     await page.locator("button", { hasText: "NEXT" }).click()
 
-    // Step 5: all No
-    const noBtns = page.locator(".tri-state-btn").filter({ hasText: "No" })
-    const noBtnCount = await noBtns.count()
-    for (let i = 0; i < noBtnCount; i++) {
-      await noBtns.nth(i).click()
+    // Doc check steps: click NO (auto-advances, last one auto-submits)
+    while (await page.getByText("Quick Document Check").isVisible()) {
+      await page.getByRole("button", { name: "NO", exact: true }).click()
+      // Wait for either next question or navigation to results
+      await page.waitForTimeout(100)
     }
-
-    await page.locator("button", { hasText: "SHOW MY SCORE" }).click()
 
     // Verify results page
     await expect(page).toHaveURL("/results")
@@ -89,14 +87,12 @@ test.describe("Full Quiz Flow -> Results", () => {
     await page.locator("button", { hasText: "None of the above" }).click()
     await page.locator("button", { hasText: "NEXT" }).click()
 
-    // Step 5: all Yes
-    const yesBtns = page.locator(".tri-state-btn").filter({ hasText: "Yes" })
-    const count = await yesBtns.count()
-    for (let i = 0; i < count; i++) {
-      await yesBtns.nth(i).click()
+    // Doc check steps: click YES (auto-advances, last one auto-submits)
+    while (await page.getByText("Quick Document Check").isVisible()) {
+      await page.getByRole("button", { name: "YES", exact: true }).click()
+      // Wait for either next question or navigation to results
+      await page.waitForTimeout(100)
     }
-
-    await page.locator("button", { hasText: "SHOW MY SCORE" }).click()
     await expect(page).toHaveURL("/results")
 
     const scoreText = await page

@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     // Send email with PDF attachment
     const { error: emailError } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "IndiaOS <onboarding@resend.dev>",
+      from: process.env.RESEND_FROM_EMAIL || "AlertDoc <onboarding@resend.dev>",
       to: email,
       subject: `Your NRI Compliance Report (Score: ${rulesOutput.score}/100)`,
       react: React.createElement(ReportEmail, {

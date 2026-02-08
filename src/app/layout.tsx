@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "IndiaOS — NRI Compliance Health Check",
+  title: "AlertDoc — NRI Compliance Health Check",
   description:
     "2-minute compliance health check for NRIs. Find out what you're missing before the IRS or Indian tax department finds you.",
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "FEMA",
   ],
   openGraph: {
-    title: "IndiaOS — NRI Compliance Health Check",
+    title: "AlertDoc — NRI Compliance Health Check",
     description:
       "2-minute compliance health check for NRIs. Find out what you're missing.",
     type: "website",

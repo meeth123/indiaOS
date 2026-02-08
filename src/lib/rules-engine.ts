@@ -400,7 +400,9 @@ function rule_pfic(answers: QuizAnswers): ComplianceResult | null {
 
   const statusNote = isPermanent
     ? " As a " + answers.usStatus + " holder, PFIC reporting is a permanent annual obligation — it does not end when you leave the US."
-    : " As an H1B holder, this obligation lasts as long as you are a US tax resident.";
+    : answers.usStatus === "H1B"
+      ? " As an H1B holder, this obligation lasts as long as you are a US tax resident."
+      : " This obligation lasts as long as you are a US tax resident.";
 
   return {
     rule_id: "pfic",
@@ -581,9 +583,9 @@ function rule_lic_premium(answers: QuizAnswers): ComplianceResult | null {
 
 function rule_citizenship_renunciation(answers: QuizAnswers): ComplianceResult | null {
   if (answers.usStatus !== "US Citizen") return null;
-  if (answers.surrenderedIndianPassport === "yes") return null;
 
-  const weight = answers.surrenderedIndianPassport === "not_sure" ? 8 * NOT_SURE_FACTOR : 8;
+  const weight = triWeight(answers.surrenderedIndianPassport, 8);
+  if (weight === 0) return null;
 
   return {
     rule_id: "citizenship_renunciation",

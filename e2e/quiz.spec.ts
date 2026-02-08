@@ -5,16 +5,17 @@ test.describe("Quiz Page", () => {
     await page.goto("/quiz")
   })
 
-  test("shows Step 1 of 5 initially", async ({ page }) => {
-    await expect(page.getByText("STEP 1 OF 5")).toBeVisible()
+  test("shows Step 1 of N initially", async ({ page }) => {
+    await expect(page.getByText(/STEP 1 OF \d+/)).toBeVisible()
     await expect(page.getByText("Your NRI Journey")).toBeVisible()
   })
 
-  test("progress bar starts at 20%", async ({ page }) => {
+  test("progress bar starts at correct percentage", async ({ page }) => {
     const fill = page.locator(".progress-fill")
     await expect(fill).toBeVisible()
     const width = await fill.evaluate((el) => el.style.width)
-    expect(width).toBe("20%")
+    // Step 1 of N: width should be a valid percentage
+    expect(parseFloat(width)).toBeGreaterThan(0)
   })
 
   test("NEXT is disabled until required fields filled", async ({ page }) => {
@@ -28,7 +29,7 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "Single" }).click()
     await page.locator("[data-testid='state-select']").selectOption("TX")
     await page.locator("button", { hasText: "NEXT" }).click()
-    await expect(page.getByText("STEP 2 OF 5")).toBeVisible()
+    await expect(page.getByText("STEP 2 OF")).toBeVisible()
     await expect(page.getByText("Your India Footprint")).toBeVisible()
   })
 
@@ -66,7 +67,7 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "Property" }).click()
     await page.locator("button", { hasText: "NEXT" }).click()
 
-    await expect(page.getByText("STEP 3 OF 5")).toBeVisible()
+    await expect(page.getByText(/STEP 3 OF \d+/)).toBeVisible()
     await expect(page.getByText("Ballpark Amounts")).toBeVisible()
     // Should see 2 dropdowns for 2 selected assets
     const selects = page.locator("select")
@@ -84,7 +85,7 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "NEXT" }).click()
     await page.locator("button", { hasText: "NEXT" }).click()
 
-    await expect(page.getByText("STEP 4 OF 5")).toBeVisible()
+    await expect(page.getByText(/STEP 4 OF \d+/)).toBeVisible()
 
     // Select rental income
     await page.locator("button", { hasText: "Rental income" }).click()
@@ -103,7 +104,7 @@ test.describe("Quiz Page", () => {
     ).toBe(false)
   })
 
-  test("Step 5: tri-state buttons work (Yes/No/Not Sure)", async ({ page }) => {
+  test("Step 5: one-per-screen auto-advances on click", async ({ page }) => {
     // Navigate to step 5
     await page.locator("[data-testid='year-select']").selectOption("2018")
     await page.locator("button", { hasText: "H1B" }).click()
@@ -117,20 +118,15 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "NEXT" }).click()
 
     await expect(page.getByText("Quick Document Check")).toBeVisible()
+    await expect(page.getByText("Question 1 of")).toBeVisible()
 
-    // Find first Yes button and click it
-    const firstYes = page.locator(".tri-state-btn").filter({ hasText: "Yes" }).first()
-    await firstYes.click()
-    expect(
-      await firstYes.evaluate((el) => el.classList.contains("active-yes"))
-    ).toBe(true)
+    // Click YES — should auto-advance to question 2
+    await page.getByRole("button", { name: "YES", exact: true }).click()
+    await expect(page.getByText("Question 2 of")).toBeVisible()
 
-    // Click No on same row
-    const firstNo = page.locator(".tri-state-btn").filter({ hasText: "No" }).first()
-    await firstNo.click()
-    expect(
-      await firstNo.evaluate((el) => el.classList.contains("active-no"))
-    ).toBe(true)
+    // Click NO on question 2 — should auto-advance to question 3
+    await page.getByRole("button", { name: "NO", exact: true }).click()
+    await expect(page.getByText("Question 3 of")).toBeVisible()
   })
 
   test("BACK button returns to previous step", async ({ page }) => {
@@ -139,33 +135,35 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "Single" }).click()
     await page.locator("[data-testid='state-select']").selectOption("TX")
     await page.locator("button", { hasText: "NEXT" }).click()
-    await expect(page.getByText("STEP 2 OF 5")).toBeVisible()
+    await expect(page.getByText("STEP 2 OF")).toBeVisible()
 
     await page.locator("button", { hasText: "BACK" }).click()
-    await expect(page.getByText("STEP 1 OF 5")).toBeVisible()
+    await expect(page.getByText(/STEP 1 OF \d+/)).toBeVisible()
   })
 
-  test("INDIAOS logo links back to home", async ({ page }) => {
-    await page.locator("nav").getByText("INDIAOS").click()
+  test("ALERTDOC logo links back to home", async ({ page }) => {
+    await page.locator("nav").getByText("ALERTDOC").click()
     await expect(page).toHaveURL("/")
   })
 
   test("progress bar updates on each step", async ({ page }) => {
     const fill = page.locator(".progress-fill")
 
-    // Step 1: 20%
-    expect(await fill.evaluate((el) => el.style.width)).toBe("20%")
+    // Step 1: should be a valid percentage > 0
+    const step1Width = parseFloat(await fill.evaluate((el) => el.style.width))
+    expect(step1Width).toBeGreaterThan(0)
 
-    // Go to step 2: 40%
+    // Go to step 2: width should increase
     await page.locator("[data-testid='year-select']").selectOption("2018")
     await page.locator("button", { hasText: "H1B" }).click()
     await page.locator("button", { hasText: "Single" }).click()
     await page.locator("[data-testid='state-select']").selectOption("TX")
     await page.locator("button", { hasText: "NEXT" }).click()
-    expect(await fill.evaluate((el) => el.style.width)).toBe("40%")
+    const step2Width = parseFloat(await fill.evaluate((el) => el.style.width))
+    expect(step2Width).toBeGreaterThan(step1Width)
   })
 
-  test("Step 5: OCI questions only show for US Citizens", async ({ page }) => {
+  test("OCI questions do not appear for H1B users", async ({ page }) => {
     // Navigate to step 5 as H1B
     await page.locator("[data-testid='year-select']").selectOption("2018")
     await page.locator("button", { hasText: "H1B" }).click()
@@ -178,8 +176,13 @@ test.describe("Quiz Page", () => {
     await page.locator("button", { hasText: "None of the above" }).click()
     await page.locator("button", { hasText: "NEXT" }).click()
 
-    // H1B should NOT see OCI or passport surrender questions
-    await expect(page.getByText("I have an OCI card")).not.toBeVisible()
-    await expect(page.getByText("I've surrendered my Indian passport")).not.toBeVisible()
+    // Walk through all doc check steps — none should show OCI questions
+    while (await page.getByText("Quick Document Check").isVisible()) {
+      await expect(page.getByText("I have an OCI card")).not.toBeVisible()
+      await expect(page.getByText("I've surrendered my Indian passport")).not.toBeVisible()
+      // Click YES to auto-advance to next question
+      await page.getByRole("button", { name: "YES", exact: true }).click()
+      await page.waitForTimeout(100)
+    }
   })
 })

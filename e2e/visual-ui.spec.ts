@@ -112,8 +112,8 @@ test.describe("Visual UI — Landing Page", () => {
     )
     expect(h1Font).toContain("Space Mono")
 
-    // Check body text font
-    const bodyFont = await page.locator("p").first().evaluate(
+    // Check body text font (target a font-sans paragraph, not the deadline banner)
+    const bodyFont = await page.locator(".brutal-card p").first().evaluate(
       (el) => getComputedStyle(el).fontFamily
     )
     expect(bodyFont).toContain("DM Sans")
@@ -257,7 +257,7 @@ test.describe("Visual UI — Quiz Page", () => {
     })
   })
 
-  test("Step 5 tri-state buttons — all states", async ({ page }) => {
+  test("Step 5 one-per-screen doc check", async ({ page }) => {
     await page.locator("[data-testid='year-select']").selectOption("2018")
     await page.locator("button", { hasText: "H1B" }).click()
     await page.locator("button", { hasText: "Single" }).click()
@@ -275,24 +275,10 @@ test.describe("Visual UI — Quiz Page", () => {
       fullPage: true,
     })
 
-    // Click various states for different items
-    const triRows = page.locator(".tri-state-btn").filter({ hasText: "Yes" })
-    const count = await triRows.count()
-    // First 4: Yes, next 4: No, rest: Not Sure
-    for (let i = 0; i < Math.min(4, count); i++) {
-      await triRows.nth(i).click()
-    }
-    const noBtns = page.locator(".tri-state-btn").filter({ hasText: "No" })
-    for (let i = 4; i < Math.min(8, await noBtns.count()); i++) {
-      await noBtns.nth(i).click()
-    }
-    const notSureBtns = page.locator(".tri-state-btn").filter({ hasText: "Not Sure" })
-    for (let i = 8; i < Math.min(11, await notSureBtns.count()); i++) {
-      await notSureBtns.nth(i).click()
-    }
-
+    // Click YES on first question
+    await page.locator("button", { hasText: "YES" }).click()
     await page.screenshot({
-      path: `${screenshotDir}/36-quiz-step5-mixed-states.png`,
+      path: `${screenshotDir}/36-quiz-step5-yes-selected.png`,
       fullPage: true,
     })
   })
@@ -342,7 +328,7 @@ test.describe("Visual UI — Results Page", () => {
     }
     await page.goto("/quiz")
     await page.evaluate(
-      (d) => localStorage.setItem("indiaos_quiz", JSON.stringify(d)),
+      (d) => localStorage.setItem("alertdoc_quiz", JSON.stringify(d)),
       { ...defaults, ...overrides }
     )
     await page.goto("/results")
@@ -444,7 +430,7 @@ test.describe("Visual UI — Results Page", () => {
   test("email capture section", async ({ page }) => {
     await seedAndGo(page)
     await page.setViewportSize({ width: 1440, height: 900 })
-    const emailSection = page.locator("form").locator("..")
+    const emailSection = page.locator("form", { hasText: "SEND MY REPORT" }).locator("..")
     await emailSection.screenshot({ path: `${screenshotDir}/50-email-capture.png` })
 
     await page.setViewportSize({ width: 375, height: 812 })

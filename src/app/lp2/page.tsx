@@ -2,13 +2,39 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  getNextDeadline,
-  getDeadlineColor,
-  formatDeadlineDate,
-} from "@/lib/deadlines";
 
-export default function Home() {
+function getNextDeadline() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const deadlines = [
+    { name: "US Tax Return / FBAR / FATCA", month: 3, day: 15 },
+    { name: "Indian ITR", month: 6, day: 31 },
+  ];
+
+  let nearest: { name: string; daysLeft: number; date: string } | null = null;
+
+  for (const d of deadlines) {
+    let deadlineDate = new Date(currentYear, d.month, d.day);
+    if (deadlineDate <= now) {
+      deadlineDate = new Date(currentYear + 1, d.month, d.day);
+    }
+    const daysLeft = Math.ceil(
+      (deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const date = deadlineDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    if (!nearest || daysLeft < nearest.daysLeft) {
+      nearest = { name: d.name, daysLeft, date };
+    }
+  }
+
+  return nearest;
+}
+
+export default function LP2Page() {
   const [nextDeadline, setNextDeadline] = useState<{
     name: string;
     daysLeft: number;
@@ -16,58 +42,19 @@ export default function Home() {
   } | null>(null);
 
   useEffect(() => {
-    const deadline = getNextDeadline();
-
-    if (deadline) {
-      setNextDeadline({
-        name: deadline.isExtension
-          ? `${deadline.formName} (Extension)`
-          : deadline.formName,
-        daysLeft: deadline.daysLeft,
-        date: formatDeadlineDate(deadline.date),
-      });
-    }
-
-    const now = new Date();
-    const tomorrow = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1
-    );
-    const timeUntilMidnight = tomorrow.getTime() - now.getTime();
-
-    const midnightTimer = setTimeout(() => {
-      const updatedDeadline = getNextDeadline();
-      if (updatedDeadline) {
-        setNextDeadline({
-          name: updatedDeadline.isExtension
-            ? `${updatedDeadline.formName} (Extension)`
-            : updatedDeadline.formName,
-          daysLeft: updatedDeadline.daysLeft,
-          date: formatDeadlineDate(updatedDeadline.date),
-        });
-      }
-    }, timeUntilMidnight);
-
-    return () => clearTimeout(midnightTimer);
+    setNextDeadline(getNextDeadline());
   }, []);
-
-  const deadlineColor = nextDeadline
-    ? getDeadlineColor(nextDeadline.daysLeft)
-    : "#22c55e";
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* ── Deadline Banner ── */}
+      {/* ── Deadline Banner (softer framing) ── */}
       {nextDeadline && (
         <div className="relative z-10 bg-black text-white px-6 py-3 text-center">
           <p className="font-mono font-bold text-sm">
             Next deadline worth knowing about:{" "}
-            <span style={{ color: deadlineColor }}>
+            <span className="highlight-yellow text-black">
               {nextDeadline.name} &mdash; {nextDeadline.date}
             </span>
-            {" — "}
-            <span className="highlight-pink">{nextDeadline.daysLeft} days left</span>
           </p>
         </div>
       )}
@@ -138,7 +125,7 @@ export default function Home() {
         </p>
       </section>
 
-      {/* ── Blind Spots ── */}
+      {/* ── Blind Spots (replaces scary stats) ── */}
       <section className="relative z-10 px-6 md:px-12 py-16 max-w-6xl mx-auto">
         <h2 className="font-mono font-bold text-2xl md:text-3xl text-center mb-4">
           The blind spots most NRIs{" "}
