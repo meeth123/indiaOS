@@ -1,0 +1,272 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Dotted Grid Background ── */
+body {
+  background-color: #fafafa;
+  background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ── Brutal Card ── */
+.brutal-card {
+  background-color: #ffffff;
+  border: 3px solid #1a1a1a;
+  box-shadow: 4px 4px 0px 0px #1a1a1a;
+  border-radius: 0;
+}
+
+.brutal-card-lg {
+  background-color: #ffffff;
+  border: 3px solid #1a1a1a;
+  box-shadow: 6px 6px 0px 0px #1a1a1a;
+  border-radius: 0;
+}
+
+/* ── Brutal Button ── */
+.brutal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 3px solid #1a1a1a;
+  box-shadow: 4px 4px 0px 0px #1a1a1a;
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+
+/* FIX #10: stronger hover — darken bg + translate */
+.brutal-btn:hover {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #1a1a1a;
+  background-color: #f0f0f0;
+}
+
+.brutal-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px #1a1a1a;
+}
+
+/* Pink variant */
+.brutal-btn-pink {
+  background-color: #FF69B4;
+  color: #1a1a1a;
+}
+
+.brutal-btn-pink:hover {
+  background-color: #ff4da6;
+}
+
+/* Yellow variant */
+.brutal-btn-yellow {
+  background-color: #FFE566;
+  color: #1a1a1a;
+}
+
+.brutal-btn-yellow:hover {
+  background-color: #ffd700;
+}
+
+/* FIX #4: clear disabled state */
+.brutal-btn:disabled,
+.brutal-btn[disabled] {
+  background-color: #e5e5e5;
+  color: #a3a3a3;
+  border-color: #a3a3a3;
+  box-shadow: 4px 4px 0px 0px #a3a3a3;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.brutal-btn:disabled:hover,
+.brutal-btn[disabled]:hover {
+  transform: none;
+  box-shadow: 4px 4px 0px 0px #a3a3a3;
+  background-color: #e5e5e5;
+}
+
+/* ── Text Highlights ── */
+/* FIX #1: zero vertical padding — let line-height handle spacing */
+.highlight-yellow {
+  background-color: #FFE566;
+  padding: 0 8px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.highlight-pink {
+  background-color: #FF69B4;
+  padding: 0 8px;
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ── Gradient Blobs ── */
+.blob-purple {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(179, 136, 255, 0.4) 0%, rgba(179, 136, 255, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob-green {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(144, 238, 144, 0.4) 0%, rgba(144, 238, 144, 0) 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Monospace Headings ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── Progress Bar ── */
+.progress-bar-brutal {
+  border: 3px solid #1a1a1a;
+  background-color: #ffffff;
+  height: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar-brutal .progress-fill {
+  background-color: #FFE566;
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* ── Score Circle ── */
+.score-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 6px solid #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+/* FIX #7: larger font for single-digit scores */
+.score-number {
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.score-number.single-digit {
+  font-size: 5rem;
+}
+
+/* ── Severity badges ── */
+.badge-urgent {
+  background-color: #ef4444;
+  color: white;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 2px solid #1a1a1a;
+}
+
+.badge-warning {
+  background-color: #FFE566;
+  color: #1a1a1a;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 2px solid #1a1a1a;
+}
+
+.badge-info {
+  background-color: #B388FF;
+  color: #1a1a1a;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 2px solid #1a1a1a;
+}
+
+/* ── Tri-state button group ── */
+.tri-state-btn {
+  border: 2px solid #1a1a1a;
+  padding: 6px 16px;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  background-color: #ffffff;
+}
+
+.tri-state-btn.active-yes {
+  background-color: #90EE90;
+}
+
+.tri-state-btn.active-no {
+  background-color: #ef4444;
+  color: white;
+}
+
+.tri-state-btn.active-notsure {
+  background-color: #FFE566;
+}
+
+/* FIX #11: "why applies" box needs more contrast */
+.why-applies-box {
+  background-color: rgba(255, 229, 102, 0.5);
+  border-left: 4px solid #FFE566;
+  padding: 12px;
+}
+
+.consequence-box {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+  padding: 12px;
+}
+
+/* ── Scrollbar styling ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fafafa;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+}
+
+/* FIX #12: footer text bigger on mobile */
+@media (max-width: 768px) {
+  footer p,
+  footer a {
+    font-size: 0.8125rem;
+  }
+}
