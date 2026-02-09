@@ -1,5 +1,5 @@
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.in";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.club";
 
 // Organization schema for brand identity
 export const organizationSchema = {

@@ -357,7 +357,7 @@ export default function Home() {
               &ldquo;Hey, I just checked my NRI compliance score &mdash; things
               like FBAR, PAN, Indian ITR. Found a couple things I didn&apos;t
               know about. You should check yours, it&apos;s free and takes 2
-              mins &rarr; alertdoc.in&rdquo;
+              mins &rarr; alertdoc.club&rdquo;
             </p>
             <p className="font-mono text-xs text-gray-500 mt-2">
               Pre-written. Copy and send.

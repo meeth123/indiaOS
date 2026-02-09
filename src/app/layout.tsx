@@ -4,7 +4,7 @@ import { homePageMetadata } from "@/lib/seo/metadata";
 import { organizationSchema } from "@/lib/seo/structured-data";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.in";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.club";
 
 export const metadata: Metadata = {
   ...homePageMetadata,

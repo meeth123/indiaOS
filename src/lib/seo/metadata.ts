@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.in";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.club";
 
 // Base keywords shared across all pages
 const baseKeywords = [
