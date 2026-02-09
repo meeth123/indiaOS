@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { QuizAnswers, RulesEngineOutput, ComplianceResult } from "@/lib/types";
 import { runRulesEngine } from "@/lib/rules-engine";
 
@@ -265,10 +266,15 @@ export default function ResultsPage() {
 
       {/* ── Nav ── */}
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
-        <Link href="/">
-          <span className="highlight-yellow font-mono font-bold text-xl tracking-tight border-3 border-black px-3 py-1">
-            ALERTDOC
-          </span>
+        <Link href="/" className="inline-block">
+          <Image
+            src="/logo.png"
+            alt="AlertDoc"
+            width={400}
+            height={133}
+            priority
+            className="h-28 w-auto md:h-32"
+          />
         </Link>
         <Link href="/quiz" className="brutal-btn text-xs">
           RETAKE QUIZ

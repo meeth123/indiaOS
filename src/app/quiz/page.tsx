@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   QuizAnswers,
   DEFAULT_QUIZ_ANSWERS,
@@ -199,10 +200,15 @@ export default function QuizPage() {
 
       {/* ── Nav ── */}
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
-        <Link href="/">
-          <span className="highlight-yellow font-mono font-bold text-xl tracking-tight border-3 border-black px-3 py-1">
-            ALERTDOC
-          </span>
+        <Link href="/" className="inline-block">
+          <Image
+            src="/logo.png"
+            alt="AlertDoc"
+            width={400}
+            height={133}
+            priority
+            className="h-28 w-auto md:h-32"
+          />
         </Link>
         <span className="font-mono text-sm font-bold text-gray-500">
           STEP {step} OF {totalSteps}

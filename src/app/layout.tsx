@@ -1,27 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { homePageMetadata } from "@/lib/seo/metadata";
+import { organizationSchema } from "@/lib/seo/structured-data";
+
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.in";
 
 export const metadata: Metadata = {
-  title: "AlertDoc — NRI Compliance Health Check",
-  description:
-    "2-minute compliance health check for NRIs. Find out what you're missing before the IRS or Indian tax department finds you.",
-  keywords: [
-    "NRI",
-    "compliance",
-    "FBAR",
-    "FATCA",
-    "Indian tax",
-    "NRI tax",
-    "PAN",
-    "OCI",
-    "FEMA",
-  ],
-  openGraph: {
-    title: "AlertDoc — NRI Compliance Health Check",
-    description:
-      "2-minute compliance health check for NRIs. Find out what you're missing.",
-    type: "website",
-  },
+  ...homePageMetadata,
+  metadataBase: new URL(baseUrl),
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -41,6 +34,12 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
       </head>
       <body className="font-sans text-black bg-offwhite min-h-screen antialiased">

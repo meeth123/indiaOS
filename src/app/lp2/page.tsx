@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 function getNextDeadline() {
   const now = new Date();
@@ -69,9 +70,14 @@ export default function LP2Page() {
       {/* ── Nav ── */}
       <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
         <Link href="/" className="inline-block">
-          <span className="highlight-yellow font-mono font-bold text-xl tracking-tight border-3 border-black px-3 py-1">
-            ALERTDOC
-          </span>
+          <Image
+            src="/logo.png"
+            alt="AlertDoc"
+            width={400}
+            height={133}
+            priority
+            className="h-28 w-auto md:h-32"
+          />
         </Link>
         <div className="hidden md:flex items-center gap-4">
           <a
