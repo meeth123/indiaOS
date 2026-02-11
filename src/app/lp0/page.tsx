@@ -89,7 +89,7 @@ export default function LP0Page() {
             width={400}
             height={133}
             priority
-            className="h-28 w-auto md:h-32"
+            className="h-20 w-auto md:h-24"
           />
         </Link>
         <div className="hidden md:flex items-center gap-4">

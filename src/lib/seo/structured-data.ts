@@ -11,7 +11,7 @@ export const organizationSchema = {
   logo: `${baseUrl}/logo.png`,
   description:
     "AlertDoc helps Non-Resident Indians (NRIs) identify compliance blind spots across US and Indian tax obligations including FBAR, FATCA, ITR, PAN-Aadhaar linking, and FEMA regulations.",
-  foundingDate: "2024",
+  foundingDate: "2025",
   sameAs: [],
   contactPoint: {
     "@type": "ContactPoint",
@@ -167,6 +167,45 @@ export const howToSchema = {
     },
   ],
 };
+
+// Article schema generator for blog posts
+export function articleSchema(post: {
+  title: string;
+  description: string;
+  slug: string;
+  date: string;
+  author: string;
+  readingTime: string;
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.description,
+    url: `${baseUrl}/blog/${post.slug}`,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      "@type": "Organization",
+      name: post.author,
+      url: baseUrl,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "AlertDoc",
+      url: baseUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${baseUrl}/logo.png`,
+      },
+    },
+    image: `${baseUrl}/og-image.png`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${baseUrl}/blog/${post.slug}`,
+    },
+  };
+}
 
 // Helper function to inject structured data into page (for server-rendered HTML)
 export function generateStructuredData(

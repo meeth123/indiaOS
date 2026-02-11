@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Nav } from "@/components/shared/nav";
 import {
   getNextDeadline,
   getDeadlineColor,
@@ -81,32 +82,7 @@ export default function Home() {
       />
 
       {/* ── Nav ── */}
-      <nav className="relative z-10 flex items-center justify-between px-6 md:px-12 py-5">
-        <Link href="/" className="inline-block">
-          <Image
-            src="/logo.png"
-            alt="AlertDoc"
-            width={400}
-            height={133}
-            priority
-            className="h-28 w-auto md:h-32"
-          />
-        </Link>
-        <div className="hidden md:flex items-center gap-4">
-          <a
-            href="#how-it-works"
-            className="font-mono text-sm font-bold border-3 border-black px-4 py-2 hover:bg-yellow transition-colors"
-          >
-            HOW IT WORKS
-          </a>
-          <a
-            href="#about"
-            className="font-mono text-sm font-bold border-3 border-black px-4 py-2 hover:bg-yellow transition-colors"
-          >
-            ABOUT
-          </a>
-        </div>
-      </nav>
+      <Nav />
 
       {/* ── Hero ── */}
       <section className="relative z-10 px-6 md:px-12 pt-16 md:pt-24 pb-20 max-w-5xl mx-auto">
@@ -207,6 +183,13 @@ export default function Home() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* CTA after blind spots */}
+        <div className="text-center mt-12">
+          <Link href="/quiz" className="brutal-btn brutal-btn-pink text-lg">
+            CHECK YOUR SCORE — FREE, 2 MINS
+          </Link>
         </div>
       </section>
 
@@ -337,6 +320,13 @@ export default function Home() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* CTA after 3 steps */}
+        <div className="text-center mt-14">
+          <Link href="/quiz" className="brutal-btn brutal-btn-pink text-lg">
+            CHECK YOUR SCORE — FREE, 2 MINS
+          </Link>
         </div>
       </section>
 

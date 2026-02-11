@@ -273,7 +273,7 @@ export default function ResultsPage() {
             width={400}
             height={133}
             priority
-            className="h-28 w-auto md:h-32"
+            className="h-20 w-auto md:h-24"
           />
         </Link>
         <Link href="/quiz" className="brutal-btn text-xs">

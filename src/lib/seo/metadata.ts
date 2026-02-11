@@ -239,6 +239,130 @@ export const lp2PageMetadata: Metadata = {
   ...baseMetadata,
 };
 
+// Blog listing page metadata
+export const blogListingMetadata: Metadata = {
+  title: "NRI Compliance Blog — Guides & Resources | AlertDoc",
+  description:
+    "Expert guides on FBAR, FATCA, Indian ITR, PAN-Aadhaar linking, PFIC reporting, and more. Everything NRIs in the USA need to stay compliant.",
+  keywords: [
+    ...baseKeywords,
+    "NRI blog",
+    "NRI compliance guide",
+    "FBAR guide",
+    "PFIC reporting",
+    "NRI tax guide",
+  ],
+  alternates: {
+    canonical: `${baseUrl}/blog`,
+  },
+  openGraph: {
+    title: "NRI Compliance Blog — Guides & Resources | AlertDoc",
+    description:
+      "Expert guides on FBAR, FATCA, Indian ITR, PAN-Aadhaar linking, and more for NRIs.",
+    type: "website",
+    url: `${baseUrl}/blog`,
+    images: [
+      {
+        url: `${baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "AlertDoc Blog - NRI Compliance Guides",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NRI Compliance Blog — Guides & Resources | AlertDoc",
+    description:
+      "Expert guides on FBAR, FATCA, Indian ITR, PAN-Aadhaar linking, and more for NRIs.",
+    images: [`${baseUrl}/og-image.png`],
+  },
+  ...baseMetadata,
+};
+
+// Calendar page metadata
+export const calendarPageMetadata: Metadata = {
+  title: "NRI Compliance Calendar 2026 — Every Deadline You Need | AlertDoc",
+  description:
+    "Interactive calendar of every NRI compliance deadline in 2026. US tax filings, Indian ITR, FBAR, FATCA, PAN-Aadhaar, and more — color-coded by category.",
+  keywords: [
+    ...baseKeywords,
+    "NRI compliance calendar 2026",
+    "NRI tax deadlines",
+    "FBAR deadline 2026",
+    "Indian ITR deadline",
+    "NRI filing dates",
+  ],
+  alternates: {
+    canonical: `${baseUrl}/calendar`,
+  },
+  openGraph: {
+    title: "NRI Compliance Calendar 2026 — Every Deadline You Need | AlertDoc",
+    description:
+      "Interactive calendar of every NRI compliance deadline in 2026.",
+    type: "website",
+    url: `${baseUrl}/calendar`,
+    images: [
+      {
+        url: `${baseUrl}/og-image.png`,
+        width: 1200,
+        height: 630,
+        alt: "AlertDoc - NRI Compliance Calendar 2026",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NRI Compliance Calendar 2026 — Every Deadline You Need | AlertDoc",
+    description:
+      "Interactive calendar of every NRI compliance deadline in 2026.",
+    images: [`${baseUrl}/og-image.png`],
+  },
+  ...baseMetadata,
+};
+
+// Blog article metadata generator
+export function blogArticleMetadata(post: {
+  title: string;
+  description: string;
+  slug: string;
+  keywords: string[];
+  author: string;
+  date: string;
+}): Metadata {
+  return {
+    title: `${post.title} | AlertDoc`,
+    description: post.description,
+    keywords: [...baseKeywords, ...post.keywords],
+    alternates: {
+      canonical: `${baseUrl}/blog/${post.slug}`,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      url: `${baseUrl}/blog/${post.slug}`,
+      publishedTime: post.date,
+      authors: [post.author],
+      images: [
+        {
+          url: `${baseUrl}/og-image.png`,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [`${baseUrl}/og-image.png`],
+    },
+    ...baseMetadata,
+  };
+}
+
 // Helper function to generate page-specific metadata
 export function generatePageMetadata(
   page: "home" | "quiz" | "results" | "lp0" | "lp2"

@@ -402,7 +402,7 @@ function rule_pfic(answers: QuizAnswers): ComplianceResult | null {
     ? " As a " + answers.usStatus + " holder, PFIC reporting is a permanent annual obligation — it does not end when you leave the US."
     : answers.usStatus === "H1B"
       ? " As an H1B holder, this obligation lasts as long as you are a US tax resident."
-      : " This obligation lasts as long as you are a US tax resident.";
+      : " As a non-immigrant visa holder, this obligation lasts as long as you are a US tax resident.";
 
   return {
     rule_id: "pfic",

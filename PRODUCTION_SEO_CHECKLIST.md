@@ -3,7 +3,7 @@
 ## 🚀 Pre-Deployment
 
 ### 1. Environment Variables
-- [ ] Set `NEXT_PUBLIC_BASE_URL=https://alertdoc.in` in production environment
+- [ ] Set `NEXT_PUBLIC_BASE_URL=https://alertdoc.club` in production environment
 - [ ] Verify environment variable is loaded correctly
 - [ ] Test that all metadata URLs use production domain
 
@@ -18,23 +18,26 @@
 ## 📊 Post-Deployment - Day 1
 
 ### 3. Google Search Console Setup
-- [ ] Add property for `https://alertdoc.in`
+- [ ] Add property for `https://alertdoc.club`
 - [ ] Verify domain ownership (DNS TXT record or HTML file)
-- [ ] Submit sitemap: `https://alertdoc.in/sitemap.xml`
+- [ ] Submit sitemap: `https://alertdoc.club/sitemap.xml`
 - [ ] Request indexing for key pages:
-  - [ ] Homepage: `https://alertdoc.in`
-  - [ ] Quiz: `https://alertdoc.in/quiz`
-  - [ ] LP0: `https://alertdoc.in/lp0`
-  - [ ] LP2: `https://alertdoc.in/lp2`
+  - [ ] Homepage: `https://alertdoc.club`
+  - [ ] Quiz: `https://alertdoc.club/quiz`
+  - [ ] Blog: `https://alertdoc.club/blog`
+  - [ ] Calendar: `https://alertdoc.club/calendar`
+  - [ ] LP0: `https://alertdoc.club/lp0`
+  - [ ] LP2: `https://alertdoc.club/lp2`
+  - [ ] Blog articles (all 5 cornerstone articles)
 
 ### 4. Robots.txt Verification
-- [ ] Visit `https://alertdoc.in/robots.txt`
+- [ ] Visit `https://alertdoc.club/robots.txt`
 - [ ] Confirm AI crawlers are allowed (GPTBot, Claude-Web, etc.)
 - [ ] Confirm sitemap URL is present
 
 ### 5. Sitemap.xml Verification
-- [ ] Visit `https://alertdoc.in/sitemap.xml`
-- [ ] Confirm all 5 routes are present
+- [ ] Visit `https://alertdoc.club/sitemap.xml`
+- [ ] Confirm all routes are present (static + blog + calendar)
 - [ ] Verify lastmod dates are correct
 - [ ] Check priorities: homepage (1.0), quiz/LPs (0.9), results (0.3)
 
@@ -75,20 +78,20 @@ Test each page for schema validation:
 URL: `https://developers.facebook.com/tools/debug/`
 
 Test all pages:
-- [ ] Homepage: `https://alertdoc.in`
+- [ ] Homepage: `https://alertdoc.club`
   - Verify og:image displays correctly
   - Check title: "AlertDoc — NRI Compliance Health Check"
   - Check description matches
 
-- [ ] Quiz: `https://alertdoc.in/quiz`
+- [ ] Quiz: `https://alertdoc.club/quiz`
   - Verify og:image displays correctly
   - Check title: "Take the NRI Compliance Quiz — AlertDoc"
 
-- [ ] LP0: `https://alertdoc.in/lp0`
+- [ ] LP0: `https://alertdoc.club/lp0`
   - Verify og:image displays correctly
   - Check title: "AlertDoc — NRI Compliance Health Check (US Edition)"
 
-- [ ] LP2: `https://alertdoc.in/lp2`
+- [ ] LP2: `https://alertdoc.club/lp2`
   - Verify og:image displays correctly
   - Check title: "AlertDoc — Find Your NRI Compliance Blind Spots in 2 Minutes"
 
@@ -101,20 +104,20 @@ Test all pages:
 URL: `https://cards-dev.twitter.com/validator`
 
 Test all pages:
-- [ ] Homepage: `https://alertdoc.in`
+- [ ] Homepage: `https://alertdoc.club`
   - Verify card type: `summary_large_image`
   - Verify image displays correctly
   - Check title and description
 
-- [ ] Quiz: `https://alertdoc.in/quiz`
+- [ ] Quiz: `https://alertdoc.club/quiz`
   - Verify card type: `summary_large_image`
   - Verify image displays correctly
 
-- [ ] LP0: `https://alertdoc.in/lp0`
+- [ ] LP0: `https://alertdoc.club/lp0`
   - Verify card type: `summary_large_image`
   - Verify image displays correctly
 
-- [ ] LP2: `https://alertdoc.in/lp2`
+- [ ] LP2: `https://alertdoc.club/lp2`
   - Verify card type: `summary_large_image`
   - Verify image displays correctly
 
@@ -204,7 +207,7 @@ URL: `https://www.linkedin.com/post-inspector/`
 **Deployment Date:** ___________
 **Verified By:** ___________
 
-**Production URL:** https://alertdoc.in
+**Production URL:** https://alertdoc.club
 
 **Key Metrics to Track:**
 - Google Search Console impressions
@@ -226,9 +229,9 @@ URL: `https://www.linkedin.com/post-inspector/`
 - LinkedIn Post Inspector: https://www.linkedin.com/post-inspector/
 
 **Production Files:**
-- Sitemap: https://alertdoc.in/sitemap.xml
-- Robots.txt: https://alertdoc.in/robots.txt
-- OG Image: https://alertdoc.in/og-image.png
+- Sitemap: https://alertdoc.club/sitemap.xml
+- Robots.txt: https://alertdoc.club/robots.txt
+- OG Image: https://alertdoc.club/og-image.png
 
 **Contact for Issues:**
 - Next.js deployment issues: Check Vercel/hosting provider docs

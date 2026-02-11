@@ -207,7 +207,7 @@ export default function QuizPage() {
             width={400}
             height={133}
             priority
-            className="h-28 w-auto md:h-32"
+            className="h-20 w-auto md:h-24"
           />
         </Link>
         <span className="font-mono text-sm font-bold text-gray-500">
