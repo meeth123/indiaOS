@@ -93,18 +93,19 @@ body {
 }
 
 /* ── Text Highlights ── */
-/* FIX #1: zero vertical padding — let line-height handle spacing */
 .highlight-yellow {
-  background-color: #FFE566;
-  padding: 0 8px;
+  background-color: transparent;
+  box-shadow: inset 0 -0.55em 0 #FFE566;
+  padding: 0 4px;
   display: inline;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
 
 .highlight-pink {
-  background-color: #FF69B4;
-  padding: 0 8px;
+  background-color: transparent;
+  box-shadow: inset 0 -0.55em 0 #FF69B4;
+  padding: 0 4px;
   display: inline;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

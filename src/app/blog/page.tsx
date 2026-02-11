@@ -18,7 +18,7 @@ export default function BlogPage() {
         <p className="font-mono font-bold text-sm uppercase tracking-wider text-gray-500 mb-6">
           AlertDoc Blog
         </p>
-        <h1 className="font-mono font-bold text-3xl md:text-5xl tracking-tight leading-[1.3] mb-4">
+        <h1 className="font-mono font-bold text-3xl md:text-5xl tracking-tight mb-4">
           NRI Compliance{" "}
           <span className="highlight-yellow">Guides &amp; Resources</span>
         </h1>
