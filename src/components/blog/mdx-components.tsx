@@ -8,8 +8,8 @@ export const mdxComponents: MDXComponents = {
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="font-mono font-bold text-2xl md:text-3xl mt-10 mb-4 highlight-yellow inline-block">
-      {children}
+    <h2 className="font-mono font-bold text-2xl md:text-3xl mt-10 mb-4 leading-[1.6]">
+      <span className="highlight-yellow">{children}</span>
     </h2>
   ),
   h3: ({ children }) => (
@@ -21,17 +21,17 @@ export const mdxComponents: MDXComponents = {
     <h4 className="font-mono font-bold text-lg mt-6 mb-2">{children}</h4>
   ),
   p: ({ children }) => (
-    <p className="font-sans text-gray-800 leading-relaxed mb-4 text-base md:text-lg">
+    <p className="font-sans text-[#1a1a1a] leading-relaxed mb-4 text-base md:text-lg">
       {children}
     </p>
   ),
   ul: ({ children }) => (
-    <ul className="font-sans text-gray-800 leading-relaxed mb-4 ml-6 list-disc space-y-2">
+    <ul className="font-sans text-[#1a1a1a] leading-relaxed mb-4 ml-6 list-disc space-y-2">
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="font-sans text-gray-800 leading-relaxed mb-4 ml-6 list-decimal space-y-2">
+    <ol className="font-sans text-[#1a1a1a] leading-relaxed mb-4 ml-6 list-decimal space-y-2">
       {children}
     </ol>
   ),
@@ -67,10 +67,10 @@ export const mdxComponents: MDXComponents = {
     </blockquote>
   ),
   strong: ({ children }) => (
-    <strong className="font-bold text-black">{children}</strong>
+    <strong className="font-bold text-[#1a1a1a]">{children}</strong>
   ),
   code: ({ children }) => (
-    <code className="font-mono text-sm bg-yellow/30 px-1.5 py-0.5 border border-black/20">
+    <code className="font-mono text-sm bg-yellow/30 px-1.5 py-0.5 border border-black/20 rounded-none">
       {children}
     </code>
   ),

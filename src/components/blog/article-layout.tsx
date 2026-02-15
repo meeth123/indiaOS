@@ -37,7 +37,7 @@ export function ArticleLayout({
 
         {/* Article Header */}
         <header className="mb-10">
-          <h1 className="font-mono font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight mb-4">
+          <h1 className="font-mono font-bold text-3xl md:text-5xl tracking-tight mb-4">
             {meta.title}
           </h1>
           <p className="font-sans text-lg text-gray-600 mb-4">
@@ -64,7 +64,7 @@ export function ArticleLayout({
           {meta.keywords.map((kw) => (
             <span
               key={kw}
-              className="font-mono text-xs border-2 border-black px-2 py-1 bg-offwhite"
+              className="font-mono text-xs font-bold border-2 border-black px-3 py-1 bg-offwhite"
             >
               {kw}
             </span>

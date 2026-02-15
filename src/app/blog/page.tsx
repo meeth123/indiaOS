@@ -4,6 +4,7 @@ import { getAllPosts } from "@/lib/blog";
 import { blogListingMetadata } from "@/lib/seo/metadata";
 import { Nav } from "@/components/shared/nav";
 import { Footer } from "@/components/shared/footer";
+import { CtaBanner } from "@/components/shared/cta-banner";
 
 export const metadata: Metadata = blogListingMetadata;
 
@@ -18,7 +19,7 @@ export default function BlogPage() {
         <p className="font-mono font-bold text-sm uppercase tracking-wider text-gray-500 mb-6">
           AlertDoc Blog
         </p>
-        <h1 className="font-mono font-bold text-3xl md:text-5xl tracking-tight mb-4">
+        <h1 className="font-mono font-bold text-3xl md:text-5xl tracking-tight mb-4 leading-[1.6] md:leading-[1.67]">
           NRI Compliance{" "}
           <span className="highlight-yellow">Guides &amp; Resources</span>
         </h1>
@@ -51,7 +52,7 @@ export default function BlogPage() {
                     })}
                   </span>
                 </div>
-                <h2 className="font-mono font-bold text-lg md:text-xl mb-2 flex-1">
+                <h2 className="font-mono font-bold text-xl md:text-2xl mb-2 flex-1">
                   {post.title}
                 </h2>
                 <p className="font-sans text-sm text-gray-600 leading-relaxed mb-4">
@@ -64,6 +65,11 @@ export default function BlogPage() {
             ))}
           </div>
         )}
+
+        <CtaBanner
+          heading="Not sure what applies to you?"
+          subtext="Take the 2-minute quiz to find your specific compliance blind spots."
+        />
       </section>
 
       <Footer />
