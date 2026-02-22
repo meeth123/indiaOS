@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { homePageMetadata } from "@/lib/seo/metadata";
 import { organizationSchema } from "@/lib/seo/structured-data";
+import { FacebookPixel } from "@/components/shared/fb-pixel";
+import { FbPageView } from "@/components/shared/fb-page-view";
 
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://alertdoc.club";
@@ -43,6 +45,8 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans text-black bg-offwhite min-h-screen antialiased">
+        <FacebookPixel />
+        <FbPageView />
         {children}
       </body>
     </html>

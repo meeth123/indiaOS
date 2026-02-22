@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { QuizAnswers, RulesEngineOutput, ComplianceResult } from "@/lib/types";
 import { runRulesEngine } from "@/lib/rules-engine";
+import { trackEvent } from "@/lib/fb-pixel";
 
 /* ── Helpers ── */
 
@@ -146,6 +147,10 @@ export default function ResultsPage() {
         const answers: QuizAnswers = JSON.parse(stored);
         const result = runRulesEngine(answers);
         setOutput(result);
+        trackEvent("CompleteRegistration", {
+          content_name: "Quiz Results",
+          value: result.score,
+        });
       }
     } catch {
       // Invalid data
@@ -199,6 +204,7 @@ export default function ResultsPage() {
   }, [showAll]);
 
   const handleShare = (platform: string) => {
+    trackEvent("Share", { content_name: "Quiz Results", platform }, true);
     const text = `I just scored ${output?.score}/100 on the AlertDoc NRI Compliance Health Check. Think you're compliant? Check yours:`;
     const url = typeof window !== "undefined" ? window.location.origin : "";
     if (platform === "twitter") {

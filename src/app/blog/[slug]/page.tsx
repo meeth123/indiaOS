@@ -8,6 +8,7 @@ import { articleSchema } from "@/lib/seo/structured-data";
 import { ArticleLayout } from "@/components/blog/article-layout";
 import { mdxComponents } from "@/components/blog/mdx-components";
 import { CtaBanner } from "@/components/shared/cta-banner";
+import { FbViewContent } from "@/components/shared/fb-view-content";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -33,6 +34,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
 
   return (
     <>
+      <FbViewContent contentName={post.title} contentCategory="blog" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}

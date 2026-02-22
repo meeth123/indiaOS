@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { trackEvent } from "@/lib/fb-pixel";
 
 export function CtaBanner({
   heading = "Find out what applies to you",
@@ -13,7 +16,13 @@ export function CtaBanner({
         {heading}
       </h3>
       <p className="font-sans text-gray-700 mb-4">{subtext}</p>
-      <Link href="/quiz" className="brutal-btn brutal-btn-pink">
+      <Link
+        href="/quiz"
+        className="brutal-btn brutal-btn-pink"
+        onClick={() =>
+          trackEvent("Lead", { content_name: "CTA: Check Your Risk Score" })
+        }
+      >
         CHECK YOUR RISK SCORE
       </Link>
     </div>
